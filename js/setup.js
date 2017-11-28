@@ -16,7 +16,7 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template').c
 var fragment = document.createDocumentFragment();
 
 // Функция поиска случайного числа
-  var getRandomInt = function (min, max) {
+var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
