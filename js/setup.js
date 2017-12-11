@@ -5,13 +5,10 @@ var WIZARD_NAMES = ['Иван', 'Хуан', 'Себастьян', 'Мария', 
 var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
+var WIZARD_FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var WIZARDS_COUNT = 4;
-
-// Блок с волшебниками
-var similarListElement = document.querySelector('.setup-similar-list');
-
-// Шаблон
-var similarWizardTemplateElement = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+var KEYCODE_ESC = 27;
+var KEYCODE_ENTER = 13;
 
 // Функция поиска случайного числа
 var getRandomInt = function (min, max) {
@@ -24,6 +21,13 @@ var getRandomFeature = function (array) {
   var randomFeature = array[getRandomInt(0, array.length - 1)];
   return randomFeature;
 };
+
+// СОЗДАНИЕ И ОТРИСОВКА БЛОКА ПОХОЖИХ ВОЛШЕБНИКОВ
+
+// Блок с волшебниками
+var similarListElement = document.querySelector('.setup-similar-list');
+// Шаблон волшебника
+var similarWizardTemplateElement = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
 // Функция создания случайного волшебника и его записи в массив
 var generateSimilarWizards = function () {
@@ -68,15 +72,11 @@ renderSimilarWizards();
 document.querySelector('.setup-similar').classList.remove('hidden');
 
 
-// ЗАДАНИЕ 12
+// РАБОТА ОКНА НАСТРОЕК ПЕРСОНАЖА
 
-var KEYCODE_ESC = 27;
-var KEYCODE_ENTER = 13;
-
-var setupOpenElement = document.querySelector('.setup-open');
 var setupElement = document.querySelector('.setup');
+var setupOpenElement = document.querySelector('.setup-open');
 var setupCloseElement = setupElement.querySelector('.setup-close');
-
 
 var onPopupEscPress = function (evt) {
   if (evt.keyCode === KEYCODE_ESC) {
@@ -118,24 +118,35 @@ setupCloseElement.addEventListener('keydown', function (evt) {
   }
 });
 
+// НАСТРОЙКА ПЕРСОНАЖА
 
 var wizardCoatElement = setupElement.querySelector('.wizard-coat');
-var wizardEyesElement = setupElement.querySelector('.wizard-eyes');
 var wizardCoatInputElement = setupElement.querySelector('input[name=coat-color]');
+
+var wizardEyesElement = setupElement.querySelector('.wizard-eyes');
 var wizardEyesInputElement = setupElement.querySelector('input[name=eyes-color]');
+
+var wizardFireballElement = setupElement.querySelector('.setup-fireball-wrap');
+var wizardFireballInputElement = setupElement.querySelector('input[fireball-color]');
 
 
 // Выбор цвета плаща по клику
-wizardCoatElement.addEventListener('click', function () {
+wizardCoatElement.addEventListener('click', function (evt) {
   var wizardCoatColor = getRandomFeature(WIZARD_COAT_COLORS);
-  wizardCoatElement.style.fill = wizardCoatColor;
+  evt.currentTarget.style.fill = wizardCoatColor;
   wizardCoatInputElement.value = wizardCoatColor;
 });
 
-
 // Выбор цвета глаз по клику
-wizardEyesElement.addEventListener('click', function () {
+wizardEyesElement.addEventListener('click', function (evt) {
   var wizardEyesColor = getRandomFeature(WIZARD_EYES_COLORS);
-  wizardEyesElement.style.fill = wizardEyesColor;
+  evt.currentTarget.style.fill = wizardEyesColor;
   wizardEyesInputElement.value = wizardEyesColor;
+});
+
+// Выбор цвета фаерболла по клику
+wizardFireballElement.addEventListener('click', function (evt) {
+  var wizardFireballColor = getRandomFeature(WIZARD_FIREBALL_COLORS);
+  evt.currentTarget.style.background = wizardFireballColor;
+  wizardFireballInputElement.value = wizardFireballColor;
 });
