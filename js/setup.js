@@ -63,6 +63,6 @@
   window.setup = {
     WIZARD_COAT_COLORS: WIZARD_COAT_COLORS,
     WIZARD_EYES_COLORS: WIZARD_EYES_COLORS
-  }
+  };
 
 })();
