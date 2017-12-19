@@ -2,6 +2,8 @@
 
 (function () {
 
+  var WIZARD_FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+  
   // РАБОТА ОКНА НАСТРОЕК ПЕРСОНАЖА
 
   var setupElement = document.querySelector('.setup');
@@ -59,14 +61,14 @@
 
   // Выбор цвета плаща по клику
   wizardCoatElement.addEventListener('click', function (evt) {
-    var wizardCoatColor = window.util.getRandomArrayElement(WIZARD_COAT_COLORS);
+    var wizardCoatColor = window.util.getRandomArrayElement(window.setup.WIZARD_COAT_COLORS);
     evt.currentTarget.style.fill = wizardCoatColor;
     wizardCoatInputElement.value = wizardCoatColor;
   });
 
   // Выбор цвета глаз по клику
   wizardEyesElement.addEventListener('click', function (evt) {
-    var wizardEyesColor = window.util.getRandomArrayElement(WIZARD_EYES_COLORS);
+    var wizardEyesColor = window.util.getRandomArrayElement(window.setup.WIZARD_EYES_COLORS);
     evt.currentTarget.style.fill = wizardEyesColor;
     wizardEyesInputElement.value = wizardEyesColor;
   });
