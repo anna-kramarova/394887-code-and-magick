@@ -1,25 +1,39 @@
 'use strict';
 
-(function () {
+// ОКНО НАСТРОЕК
 
-  var WIZARD_FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+(function () {
 
   // РАБОТА ОКНА НАСТРОЕК ПЕРСОНАЖА
 
-  var setupElement = document.querySelector('.setup');
-  var setupOpenElement = document.querySelector('.setup-open');
-  var setupCloseElement = setupElement.querySelector('.setup-close');
+  var popupElement = document.querySelector('.setup');
+  var popupOpenElement = document.querySelector('.setup-open');
+  var popupCloseElement = popupElement.querySelector('.setup-close');
+
+  var popupElementStartCoords;
 
   // Функция открытия окна, добавление обработчика по нажатию на Esc
   var openPopup = function () {
-    setupElement.classList.remove('hidden');
+    popupElement.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
+
+    // Задание начальных координат окна
+    popupElementStartCoords = {
+      x: popupElement.offsetLeft,
+      y: popupElement.offsetTop
+    };
+
   };
 
   // Функция закрытия окна, удаление обработчика по нажатию на Esc
   var closePopup = function () {
-    setupElement.classList.add('hidden');
+    popupElement.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
+
+    // Сброс координат окна на начальные
+    popupElement.style.left = popupElementStartCoords.x + 'px';
+    popupElement.style.top = popupElementStartCoords.y + 'px';
+
   };
 
   // Функция-обработчик закрытия окна по нажатию на Esc
@@ -28,56 +42,83 @@
   };
 
   // Обработчик открытия окна по клику на иконку
-  setupOpenElement.addEventListener('click', function () {
+  popupOpenElement.addEventListener('click', function () {
     openPopup();
   });
 
   // Обработчик открытия окна по нажатию на enter при иконке в фокусе
-  setupOpenElement.addEventListener('keydown', function (evt) {
+  popupOpenElement.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, openPopup);
   });
 
   // Обработчик закрытия окна по клику на крестик
-  setupCloseElement.addEventListener('click', function () {
+  popupCloseElement.addEventListener('click', function () {
     closePopup();
   });
 
   // Обработчик закрытия окна по нажатию на enter при крестике в фокусе
-  setupCloseElement.addEventListener('keydown', function (evt) {
+  popupCloseElement.addEventListener('keydown', function (evt) {
     window.util.isEnterEvent(evt, closePopup);
   });
 
-  // НАСТРОЙКА ПЕРСОНАЖА
 
-  var wizardCoatElement = setupElement.querySelector('.wizard-coat');
-  var wizardCoatInputElement = setupElement.querySelector('input[name=coat-color]');
+  // ПЕРЕТАСКИВАНИЕ ОКНА НАСТРОЕК ПЕРСОНАЖА
 
-  var wizardEyesElement = setupElement.querySelector('.wizard-eyes');
-  var wizardEyesInputElement = setupElement.querySelector('input[name=eyes-color]');
+  // Элемент картинки пользователя
+  var popupHandleElement = popupElement.querySelector('.setup-user-pic');
 
-  var wizardFireballElement = setupElement.querySelector('.setup-fireball-wrap');
-  var wizardFireballInputElement = setupElement.querySelector('input[name=fireball-color]');
+  // Обработчик начала перетаскивания
+  popupHandleElement.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
 
+    // Стартовые координаты мыши
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
 
-  // Выбор цвета плаща по клику
-  wizardCoatElement.addEventListener('click', function (evt) {
-    var wizardCoatColor = window.util.getRandomArrayElement(window.setup.WIZARD_COAT_COLORS);
-    evt.currentTarget.style.fill = wizardCoatColor;
-    wizardCoatInputElement.value = wizardCoatColor;
+    // Функция передвижения блока в процессе перетаскивания
+    var onMouseMove = function (mousemoveEvt) {
+
+      // Расчет сдвига мыши
+      var shift = {
+        x: mousemoveEvt.x - startCoords.x,
+        y: mousemoveEvt.y - startCoords.y
+      };
+
+      // Расчет новых координат окна
+      var popupElementCoords = {
+        x: popupElement.offsetLeft + shift.x,
+        y: popupElement.offsetTop + shift.y
+      };
+
+      // Задание новых координат окна
+      popupElement.style.left = popupElementCoords.x + 'px';
+      popupElement.style.top = popupElementCoords.y + 'px';
+
+      // Переназначение стартовых координат мыши на текущие
+      startCoords = {
+        x: mousemoveEvt.clientX,
+        y: mousemoveEvt.clientY
+      };
+
+    };
+
+    // Функция-обработчик прекращения перетаскивания, удаление обработчиков процесса и прекращения перетаскивания
+    var onMouseUp = function (mouseupEvt) {
+      mouseupEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    // Обработчик процесса перетаскивания
+    document.addEventListener('mousemove', onMouseMove);
+
+    // Обработчик конца перетаскивания
+    document.addEventListener('mouseup', onMouseUp);
+
   });
 
-  // Выбор цвета глаз по клику
-  wizardEyesElement.addEventListener('click', function (evt) {
-    var wizardEyesColor = window.util.getRandomArrayElement(window.setup.WIZARD_EYES_COLORS);
-    evt.currentTarget.style.fill = wizardEyesColor;
-    wizardEyesInputElement.value = wizardEyesColor;
-  });
-
-  // Выбор цвета фаерболла по клику
-  wizardFireballElement.addEventListener('click', function (evt) {
-    var wizardFireballColor = window.util.getRandomArrayElement(WIZARD_FIREBALL_COLORS);
-    evt.currentTarget.style.background = wizardFireballColor;
-    wizardFireballInputElement.value = wizardFireballColor;
-  });
 
 })();
